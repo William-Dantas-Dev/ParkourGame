@@ -384,7 +384,7 @@ MonoBehaviour:
   distance: 5
   minVerticalAngle: -5
   maxVerticalAngle: 80
-  rotationSpeed: 300
+  rotationSpeed: 150
   invertX: 0
   invertY: 1
 --- !u!1 &410087039
@@ -518,7 +518,7 @@ GameObject:
   - component: {fileID: 607656883}
   - component: {fileID: 607656882}
   m_Layer: 7
-  m_Name: Cube (3)
+  m_Name: Obstacle -- 1.5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -532,12 +532,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 607656880}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 3, y: 0.75, z: 0}
   m_LocalScale: {x: 3, y: 1.5, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1330270394}
+  m_Father: {fileID: 1580557150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &607656882
 BoxCollider:
@@ -623,7 +623,7 @@ GameObject:
   - component: {fileID: 817861253}
   - component: {fileID: 817861252}
   m_Layer: 7
-  m_Name: Cube (1)
+  m_Name: Obstacle -- 0.75
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -637,12 +637,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 817861250}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -3, y: 0.375, z: 0}
   m_LocalScale: {x: 3, y: 0.75, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1330270394}
+  m_Father: {fileID: 1580557150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &817861252
 BoxCollider:
@@ -777,7 +777,7 @@ GameObject:
   - component: {fileID: 963252702}
   - component: {fileID: 963252701}
   m_Layer: 7
-  m_Name: Cube (4)
+  m_Name: Obstacle -- 2.0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -791,12 +791,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963252699}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6, y: 1, z: 0}
   m_LocalScale: {x: 3, y: 2, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1330270394}
+  m_Father: {fileID: 1580557150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &963252701
 BoxCollider:
@@ -882,7 +882,7 @@ GameObject:
   - component: {fileID: 1300572505}
   - component: {fileID: 1300572504}
   m_Layer: 7
-  m_Name: Cube (5)
+  m_Name: Obstacle -- 2.5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -896,12 +896,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1300572502}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 9, y: 1.25, z: 0}
   m_LocalScale: {x: 3, y: 2.5, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1330270394}
+  m_Father: {fileID: 1580557150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1300572504
 BoxCollider:
@@ -1004,12 +1004,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 301897312}
-  - {fileID: 2077116923}
-  - {fileID: 817861251}
-  - {fileID: 1410649808}
-  - {fileID: 607656881}
-  - {fileID: 963252700}
-  - {fileID: 1300572503}
+  - {fileID: 1580557150}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1410649807
@@ -1025,7 +1020,7 @@ GameObject:
   - component: {fileID: 1410649810}
   - component: {fileID: 1410649809}
   m_Layer: 7
-  m_Name: Cube (2)
+  m_Name: Obstacle -- 1.0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1039,12 +1034,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410649807}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 3, y: 1, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1330270394}
+  m_Father: {fileID: 1580557150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &1410649809
 BoxCollider:
@@ -1117,6 +1112,43 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410649807}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1580557149
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1580557150}
+  m_Layer: 0
+  m_Name: Obstacles
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1580557150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1580557149}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2077116923}
+  - {fileID: 817861251}
+  - {fileID: 1410649808}
+  - {fileID: 607656881}
+  - {fileID: 963252700}
+  - {fileID: 1300572503}
+  m_Father: {fileID: 1330270394}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1643229139
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1218,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 5420bfa10020863479e0581f2b14872d, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 0
+  m_ApplyRootMotion: 1
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
   m_WarningMessage: 
@@ -1234,6 +1266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   forwardRayOffset: {x: 0, y: 0.25, z: 0}
   forwardRayLength: 0.8
+  heightRayLength: 5
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 128
@@ -1249,6 +1282,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae9959d187ccf64b95e119bf1325acb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  parkourActions:
+  - {fileID: 11400000, guid: c4e86fa067c6a4e4790d48099b406d76, type: 2}
+  - {fileID: 11400000, guid: 3713c04414946794894f5b61f2af8b54, type: 2}
 --- !u!1 &2077116922
 GameObject:
   m_ObjectHideFlags: 0
@@ -1262,7 +1298,7 @@ GameObject:
   - component: {fileID: 2077116925}
   - component: {fileID: 2077116924}
   m_Layer: 7
-  m_Name: Cube
+  m_Name: Obstacle -- 0.5
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1276,12 +1312,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2077116922}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: -6, y: 0.25, z: 0}
   m_LocalScale: {x: 3, y: 0.5, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1330270394}
+  m_Father: {fileID: 1580557150}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &2077116924
 BoxCollider:

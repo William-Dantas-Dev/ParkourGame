@@ -21,6 +21,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
 
+    private bool hasControl = true;
+
     [Header("Rotation Settings")]
     [SerializeField] private float rotationSpeed = 500f;
     private Quaternion targetRotation;
@@ -33,6 +35,13 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        GroundCheck();
+        MovePlayer();
+    }
+
+    private void MovePlayer()
+    {
+        if (!hasControl) return;
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -41,7 +50,6 @@ public class PlayerController : MonoBehaviour
         var moveInput = (new Vector3(horizontal, 0f, vertical)).normalized;
         var moveDir = cameraController.PlanarRotation * moveInput;
 
-        GroundCheck();
         if (isGrounded)
         {
             ySpeed = -0.5f;
@@ -61,11 +69,24 @@ public class PlayerController : MonoBehaviour
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         animator.SetFloat("moveAmount", moveAmount, 0.2f, Time.deltaTime);
+
     }
 
     private void GroundCheck()
     {
         isGrounded = Physics.CheckSphere(transform.TransformPoint(groundCheckOffset), groundCheckRadius, groundLayer);
+    }
+
+    public void SetControl(bool hasControl)
+    {
+        this.hasControl = hasControl;
+        characterController.enabled = hasControl;
+
+        if(!hasControl)
+        {
+            animator.SetFloat("moveAmount", 0f);
+            targetRotation = transform.rotation;
+        }
     }
 
     private void OnDrawGizmosSelected()
