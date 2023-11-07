@@ -43,6 +43,7 @@ public class CameraController : MonoBehaviour
         var focusPosition = followTarget.position + framingOffSet;
         transform.position = focusPosition - targetRotation * new Vector3(0, 0, distance);
         transform.rotation = targetRotation;
+
     }
     public Quaternion PlanarRotation => Quaternion.Euler(0f, rotationY, 0f);
 }

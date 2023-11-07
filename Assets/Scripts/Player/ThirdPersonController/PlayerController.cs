@@ -47,6 +47,7 @@ public class PlayerController : MonoBehaviour
 
         float moveAmount = Mathf.Clamp01(Mathf.Abs(horizontal) + Mathf.Abs(vertical));
 
+
         var moveInput = (new Vector3(horizontal, 0f, vertical)).normalized;
         var moveDir = cameraController.PlanarRotation * moveInput;
 
@@ -94,4 +95,6 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = new Color(0, 1, 0, 0.5f);
         Gizmos.DrawSphere(transform.TransformPoint(groundCheckOffset), groundCheckRadius);
     }
+
+    public float RotationSpeed => rotationSpeed;
 }
