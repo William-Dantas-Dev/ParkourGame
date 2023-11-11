@@ -7,7 +7,9 @@ public class EnvironmentScanner : MonoBehaviour
     [SerializeField] private Vector3 forwardRayOffset = new Vector3(0, 0.25f, 0);
     [SerializeField] private float forwardRayLength = 0.8f;
     [SerializeField] private float heightRayLength = 5f;
+    [SerializeField] private float ledgeRayLength = 10f;
     [SerializeField] private LayerMask obstacleLayer;
+    [SerializeField] private float ledgeHeightThreshhold = 0.75f;
 
     public ObstacleHitData ObstacleCheck()
     {
@@ -26,6 +28,38 @@ public class EnvironmentScanner : MonoBehaviour
 
         return hitData;
     }
+
+    public bool LedgeCheck(Vector3 moveDir, out LedgeData ledgeData)
+    {
+        ledgeData = new LedgeData();
+
+        if(moveDir == Vector3.zero) return false;
+
+
+        float originOffset = 0.5f;
+        var origin = transform.position + moveDir * originOffset + Vector3.up;
+
+        if(Physics.Raycast(origin, Vector3.down, out RaycastHit hit, ledgeRayLength, obstacleLayer))
+        {
+            Debug.DrawRay(origin, Vector3.down * ledgeRayLength, Color.green);
+
+            var surfaceRayOrigin = transform.position + moveDir - new Vector3(0, 0.1f, 0f);
+            if(Physics.Raycast(surfaceRayOrigin, -moveDir, out RaycastHit surfaceHit, 2, obstacleLayer))
+            {
+                float height = transform.position.y - hit.point.y;
+                if (height > ledgeHeightThreshhold)
+                {
+                    ledgeData.angle = Vector3.Angle(transform.forward, surfaceHit.normal);
+                    ledgeData.height = height;
+                    ledgeData.surfaceHit = surfaceHit;
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+    }
 }
 
 public struct ObstacleHitData
@@ -34,4 +68,11 @@ public struct ObstacleHitData
     public bool heightHitFound;
     public RaycastHit forwardHit;
     public RaycastHit heightHit;
+}
+
+public struct LedgeData
+{
+    public float height;
+    public float angle;
+    public RaycastHit surfaceHit;
 }

@@ -5,6 +5,8 @@ using UnityEngine;
 public class ParkourController : MonoBehaviour
 {
     [SerializeField] List<ParkourAction> parkourActions;
+    [SerializeField] ParkourAction jumpDownAction;
+
     private bool inAction;
 
     private EnvironmentScanner environmentScanner;
@@ -20,9 +22,9 @@ public class ParkourController : MonoBehaviour
 
     private void Update()
     {
+        var hitData = environmentScanner.ObstacleCheck();
         if (Input.GetButton("Jump") && !inAction)
         {
-            var hitData = environmentScanner.ObstacleCheck();
             if (hitData.forwardHitFound)
             {
                 foreach(var action in parkourActions)
@@ -34,6 +36,15 @@ public class ParkourController : MonoBehaviour
                     }
                 }
                 //Debug.Log("Obstacle Found: " + hitData.forwardHit.transform.name);
+            }
+        }
+
+        if (playerController.isOnLedge && !inAction && !hitData.forwardHitFound && Input.GetButton("Jump"))
+        {
+            if(playerController.LedgeData.angle <= 50)
+            {
+                playerController.isOnLedge = false;
+                StartCoroutine(DoParkourAction(jumpDownAction));
             }
         }
     }
