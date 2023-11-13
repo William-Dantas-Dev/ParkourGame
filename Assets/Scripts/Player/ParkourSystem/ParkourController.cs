@@ -8,8 +8,6 @@ public class ParkourController : MonoBehaviour
     [SerializeField] private ParkourAction jumpDownAction;
     [SerializeField] private float autoDropHeightLimit = 1f;
 
-    private bool inAction;
-
     private EnvironmentScanner environmentScanner;
     private Animator animator;
     private PlayerController playerController;
@@ -24,7 +22,7 @@ public class ParkourController : MonoBehaviour
     private void Update()
     {
         var hitData = environmentScanner.ObstacleCheck();
-        if (Input.GetButton("Jump") && !inAction)
+        if (Input.GetButton("Jump") && !playerController.InAction)
         {
             if (hitData.forwardHitFound)
             {
@@ -40,7 +38,7 @@ public class ParkourController : MonoBehaviour
             }
         }
 
-        if (playerController.isOnLedge && !inAction && !hitData.forwardHitFound)
+        if (playerController.IsOnLedge && !playerController.InAction && !hitData.forwardHitFound)
         {
             bool shouldJump = true;
             Debug.Log(playerController.LedgeData.height);
@@ -51,7 +49,7 @@ public class ParkourController : MonoBehaviour
 
             if(shouldJump && playerController.LedgeData.angle <= 50)
             {
-                playerController.isOnLedge = false;
+                playerController.IsOnLedge = false;
                 StartCoroutine(DoParkourAction(jumpDownAction));
             }
         }
@@ -59,53 +57,23 @@ public class ParkourController : MonoBehaviour
 
     private IEnumerator DoParkourAction(ParkourAction action)
     {
-        inAction = true;
         playerController.SetControl(false);
 
-        animator.SetBool("mirrorAction", action.Mirror);
-        animator.CrossFade(action.AnimName, 0.2f);
-        yield return null;
-
-        var animState = animator.GetNextAnimatorStateInfo(0);
-        if(!animState.IsName(action.AnimName))
+        MatchTargetParams matchParam = null;
+        if (action.EnableTargetMatching)
         {
-            Debug.LogError("The parkour animation is Wrong!!!");
+            matchParam = new MatchTargetParams()
+            {
+                pos = action.MatchPos,
+                bodyPart = action.MatchBodyParty,
+                posWeight = action.MatchPosWeight,
+                startTime = action.MatchStartTime,
+                targetTime = action.MatchTargetTime,
+            };
         }
-        //yield return new WaitForSeconds(animState.length);
+        yield return playerController.DoAction(action.AnimName, matchParam, action.TargetRotation,
+            action.RotateToObstacle, action.PostActionDelay, action.Mirror);
 
-        float timer = 0f;
-        while(timer <= animState.length)
-        {
-            timer += Time.deltaTime;
-
-            // Rotate the player towards the obstacles
-            if (action.RotateToObstacle)
-            {
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, action.TargetRotation, playerController.RotationSpeed * Time.deltaTime);
-            }
-
-            if(action.EnableTargetMatching)
-            {
-                MatchTarget(action);
-            }
-
-            if (animator.IsInTransition(0) && timer > 0.5f)
-            {
-                break;
-            }
-
-            yield return null;
-        }
-        yield return new WaitForSeconds(action.PostActionDelay);
         playerController.SetControl(true);
-        inAction = false;
-    }
-
-    private void MatchTarget(ParkourAction action)
-    {
-        if (animator.isMatchingTarget) return;
-        animator.MatchTarget(action.MatchPos, transform.rotation, action.MatchBodyParty,
-            new MatchTargetWeightMask(action.MatchPosWeight, 0), action.MatchStartTime,
-            action.MatchTargetTime);
     }
 }

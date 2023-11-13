@@ -13,7 +13,9 @@ public class PlayerController : MonoBehaviour
 
     [Header("Move Settings")]
     [SerializeField] private float moveSpeed = 5f;
-    public bool isOnLedge {  get; set; }
+    private bool hasControl = true;
+    public bool InAction { get; private set; }
+    public bool IsOnLedge {  get; set; }
     public LedgeData LedgeData { get; set; }
     private Vector3 desiredMoveDir;
     private Vector3 moveDir;
@@ -27,8 +29,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Vector3 groundCheckOffset;
     [SerializeField] private LayerMask groundLayer;
     private bool isGrounded;
-
-    private bool hasControl = true;
 
     [Header("Rotation Settings")]
     [SerializeField] private float rotationSpeed = 500f;
@@ -66,8 +66,8 @@ public class PlayerController : MonoBehaviour
             ySpeed = -0.5f;
             velocity = desiredMoveDir * moveSpeed;
 
-            isOnLedge = environmentScanner.LedgeCheck(desiredMoveDir, out LedgeData ledgeData);
-            if(isOnLedge)
+            IsOnLedge = environmentScanner.LedgeCheck(desiredMoveDir, out LedgeData ledgeData);
+            if(IsOnLedge)
             {
                 LedgeData = ledgeData;
                 LedgeMovement();
@@ -127,6 +127,43 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public IEnumerator DoAction(string animName, MatchTargetParams matchParams, Quaternion targetRotation, bool rotate = false,
+        float postDelay = 0f, bool mirror = false)
+    {
+        InAction = true;
+
+        animator.SetBool("mirrorAction", mirror);
+        animator.CrossFade(animName, 0.2f);
+        yield return null;
+
+        var animState = animator.GetNextAnimatorStateInfo(0);
+        if (!animState.IsName(animName)) Debug.LogError("The parkour animation is Wrong!!!");
+
+        float timer = 0f;
+        while (timer <= animState.length)
+        {
+            timer += Time.deltaTime;
+
+            if (rotate) transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            if (matchParams != null) MatchTarget(matchParams);
+
+            if (animator.IsInTransition(0) && timer > 0.5f) break;
+
+            yield return null;
+        }
+        yield return new WaitForSeconds(postDelay);
+
+        InAction = false;
+    }
+
+    private void MatchTarget(MatchTargetParams matchTarget)
+    {
+        if (animator.isMatchingTarget) return;
+        animator.MatchTarget(matchTarget.pos, transform.rotation, mp.bodyPart, new MatchTargetWeightMask(matchTarget.posWeight, 0),
+            matchTarget.startTime, matchTarget.targetTime);
+    }
+
     public void SetControl(bool hasControl)
     {
         this.hasControl = hasControl;
@@ -152,4 +189,13 @@ public class PlayerController : MonoBehaviour
     }
 
     public float RotationSpeed => rotationSpeed;
+}
+
+public class MatchTargetParams
+{
+    public Vector3 pos;
+    public AvatarTarget bodyPart;
+    public Vector3 posWeight;
+    public float startTime;
+    public float targetTime;
 }
