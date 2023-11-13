@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ParkourController : MonoBehaviour
 {
-    [SerializeField] List<ParkourAction> parkourActions;
-    [SerializeField] ParkourAction jumpDownAction;
+    [SerializeField] private List<ParkourAction> parkourActions;
+    [SerializeField] private ParkourAction jumpDownAction;
+    [SerializeField] private float autoDropHeightLimit = 1f;
 
     private bool inAction;
 
@@ -39,9 +40,16 @@ public class ParkourController : MonoBehaviour
             }
         }
 
-        if (playerController.isOnLedge && !inAction && !hitData.forwardHitFound && Input.GetButton("Jump"))
+        if (playerController.isOnLedge && !inAction && !hitData.forwardHitFound)
         {
-            if(playerController.LedgeData.angle <= 50)
+            bool shouldJump = true;
+            Debug.Log(playerController.LedgeData.height);
+            if(playerController.LedgeData.height > autoDropHeightLimit && !Input.GetButton("Jump"))
+            {
+                shouldJump = false;
+            }
+
+            if(shouldJump && playerController.LedgeData.angle <= 50)
             {
                 playerController.isOnLedge = false;
                 StartCoroutine(DoParkourAction(jumpDownAction));

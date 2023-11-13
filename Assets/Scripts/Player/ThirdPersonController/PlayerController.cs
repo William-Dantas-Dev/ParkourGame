@@ -65,17 +65,19 @@ public class PlayerController : MonoBehaviour
         {
             ySpeed = -0.5f;
             velocity = desiredMoveDir * moveSpeed;
+
             isOnLedge = environmentScanner.LedgeCheck(desiredMoveDir, out LedgeData ledgeData);
             if(isOnLedge)
             {
                 LedgeData = ledgeData;
                 LedgeMovement();
-                Debug.Log("On Ledge");
             }
+            animator.SetFloat("moveAmount", velocity.magnitude / moveSpeed, 0.2f, Time.deltaTime);
         }
         else
         {
             ySpeed += Physics.gravity.y * Time.deltaTime;
+
             velocity = transform.forward * moveSpeed;
         }
 
@@ -90,8 +92,6 @@ public class PlayerController : MonoBehaviour
         }
 
         transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        animator.SetFloat("moveAmount", velocity.magnitude / moveSpeed, 0.2f, Time.deltaTime);
-
     }
 
     private void GroundCheck()
@@ -102,11 +102,28 @@ public class PlayerController : MonoBehaviour
 
     private void LedgeMovement()
     {
-        float angle = Vector3.Angle(LedgeData.surfaceHit.normal, desiredMoveDir);
-        if(angle < 90)
+        float signedAngle = Vector3.SignedAngle(LedgeData.surfaceHit.normal, desiredMoveDir, Vector3.up);
+        float angle = Mathf.Abs(signedAngle);
+
+        if(Vector3.Angle(desiredMoveDir, transform.forward) >= 80)
+        {
+            // Don't move, but rotate
+            velocity = Vector3.zero;
+            return;
+        }
+        
+        if(angle < 60)
         {
             velocity = Vector3.zero;
             moveDir = Vector3.zero;
+        }else if(angle < 90)
+        {
+            // Angle is b/w 60 and 90, so limit the velocity to horizontal direction
+            var left = Vector3.Cross(Vector3.up, LedgeData.surfaceHit.normal);
+            var dir = left * Mathf.Sign(signedAngle);
+
+            velocity = velocity.magnitude * dir;
+            moveDir = dir;
         }
     }
 
@@ -120,6 +137,12 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("moveAmount", 0f);
             targetRotation = transform.rotation;
         }
+    }
+
+    public bool HasControl
+    {
+        get => hasControl;
+        set => hasControl = value;
     }
 
     private void OnDrawGizmosSelected()
