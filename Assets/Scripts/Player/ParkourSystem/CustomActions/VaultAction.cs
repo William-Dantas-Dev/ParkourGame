@@ -7,7 +7,7 @@ public class VaultAction : ParkourAction
 {
     public override bool CheckIfPossible(ObstacleHitData hitData, Transform player)
     {
-        if(!base.CheckIfPossible(hitData, player))
+        if (!base.CheckIfPossible(hitData, player))
         {
             return false;
         }

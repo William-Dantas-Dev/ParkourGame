@@ -15,6 +15,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float moveSpeed = 5f;
     private bool hasControl = true;
     public bool InAction { get; private set; }
+    public bool IsHanging { get; set; }
     public bool IsOnLedge {  get; set; }
     public LedgeData LedgeData { get; set; }
     private Vector3 desiredMoveDir;
@@ -48,7 +49,7 @@ public class PlayerController : MonoBehaviour
 
     private void MovePlayer()
     {
-        if (!hasControl) return;
+        
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
@@ -57,6 +58,9 @@ public class PlayerController : MonoBehaviour
         var moveInput = (new Vector3(horizontal, 0f, vertical)).normalized;
         desiredMoveDir = cameraController.PlanarRotation * moveInput;
         moveDir = desiredMoveDir;
+
+        if (!hasControl || IsHanging) return;
+
         velocity = Vector3.zero;
 
         GroundCheck();
@@ -66,7 +70,7 @@ public class PlayerController : MonoBehaviour
             ySpeed = -0.5f;
             velocity = desiredMoveDir * moveSpeed;
 
-            IsOnLedge = environmentScanner.LedgeCheck(desiredMoveDir, out LedgeData ledgeData);
+            IsOnLedge = environmentScanner.ObstacleLedgeCheck(desiredMoveDir, out LedgeData ledgeData);
             if(IsOnLedge)
             {
                 LedgeData = ledgeData;
@@ -160,7 +164,7 @@ public class PlayerController : MonoBehaviour
     private void MatchTarget(MatchTargetParams matchTarget)
     {
         if (animator.isMatchingTarget) return;
-        animator.MatchTarget(matchTarget.pos, transform.rotation, mp.bodyPart, new MatchTargetWeightMask(matchTarget.posWeight, 0),
+        animator.MatchTarget(matchTarget.pos, transform.rotation, matchTarget.bodyPart, new MatchTargetWeightMask(matchTarget.posWeight, 0),
             matchTarget.startTime, matchTarget.targetTime);
     }
 
