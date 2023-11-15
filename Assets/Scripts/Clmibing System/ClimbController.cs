@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ClimbController : MonoBehaviour
 {
-    PlayerController playerController;
-    EnvironmentScanner environmentScanner;
+    private ClimbPoint currentPoint;
+    private PlayerController playerController;
+    private EnvironmentScanner environmentScanner;
 
     private void Start()
     {
@@ -31,6 +32,7 @@ public class ClimbController : MonoBehaviour
         {
             if (environmentScanner.ClimbLedgeCheck(transform.forward, out RaycastHit ledgeHit))
             {
+                currentPoint = ledgeHit.transform.GetComponent<ClimbPoint>();
                 playerController.SetControl(false);
                 StartCoroutine(JumpToLedge("Idle To Braced Hang", ledgeHit.transform, 0.41f, 0.54f));
             }
@@ -39,7 +41,34 @@ public class ClimbController : MonoBehaviour
 
     private void JumpLedgeToLedge()
     {
+        float horizontal = Mathf.Round(Input.GetAxisRaw("Horizontal"));
+        float vertical = Mathf.Round(Input.GetAxisRaw("Vertical"));
+        var inputDir = new Vector2(horizontal, vertical);
 
+        if (playerController.InAction || inputDir == Vector2.zero) return;
+
+        var neighbour = currentPoint.GetNeighbour(inputDir);
+        if (neighbour == null) return;
+
+        if(neighbour.connectionType == ConnectionType.Jump && Input.GetButton("Jump"))
+        {
+            currentPoint = neighbour.point;
+            if(neighbour.direction.y == 1)
+            {
+                StartCoroutine(JumpToLedge("Braced Hang Hop Up", currentPoint.transform, 0.35f, 0.65f));
+            }else if(neighbour.direction.y == -1)
+            {
+                StartCoroutine(JumpToLedge("Braced Hang Drop", currentPoint.transform, 0.31f, 0.65f));
+            }
+            else if (neighbour.direction.x == 1)
+            {
+                StartCoroutine(JumpToLedge("Braced Hang Hop Right", currentPoint.transform, 0.20f, 0.50f));
+            }
+            else if (neighbour.direction.x == -1)
+            {
+                StartCoroutine(JumpToLedge("Braced Hang Hop Left", currentPoint.transform, 0.20f, 0.50f));
+            }
+        }
     }
 
     private IEnumerator JumpToLedge(string anim, Transform ledge, float matchStartTime, float matchTargetTime)
