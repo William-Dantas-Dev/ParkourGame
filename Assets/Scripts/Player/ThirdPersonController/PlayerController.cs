@@ -131,24 +131,28 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    public IEnumerator DoAction(string animName, MatchTargetParams matchParams, Quaternion targetRotation, bool rotate = false,
-        float postDelay = 0f, bool mirror = false)
+    public IEnumerator DoAction(string animName, MatchTargetParams matchParams = null, Quaternion targetRotation = new Quaternion(),
+        bool rotate = false, float postDelay = 0f, bool mirror = false)
     {
         InAction = true;
 
         animator.SetBool("mirrorAction", mirror);
-        animator.CrossFade(animName, 0.2f);
+        animator.CrossFadeInFixedTime(animName, 0.2f);
         yield return null;
 
         var animState = animator.GetNextAnimatorStateInfo(0);
         if (!animState.IsName(animName)) Debug.LogError("The parkour animation is Wrong!!!");
 
+        float rotateStartTime = (matchParams != null) ? matchParams.startTime : 0f;
+
         float timer = 0f;
         while (timer <= animState.length)
         {
             timer += Time.deltaTime;
+            float normalizedTime = timer / animState.length;
 
-            if (rotate) transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+
+            if (rotate && normalizedTime > rotateStartTime) transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
 
             if (matchParams != null) MatchTarget(matchParams);
 
@@ -178,6 +182,16 @@ public class PlayerController : MonoBehaviour
             animator.SetFloat("moveAmount", 0f);
             targetRotation = transform.rotation;
         }
+    }
+
+    public void EnableCharacterController(bool enabled)
+    {
+        characterController.enabled = enabled;
+    }
+
+    public void RestTargetRotation()
+    {
+        targetRotation = transform.rotation;
     }
 
     public bool HasControl
